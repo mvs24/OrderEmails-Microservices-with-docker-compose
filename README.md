@@ -14,7 +14,7 @@ To run this project you need to follow these steps:<br>
 5- Run: cd messaging-service<br>
 6- Run: npm i (to install all the dependencies of messaging-service)<br>
 7- cd ..<br>
-8- Run: docker-compose up --build, and wait until everything is finished running.<br>
+8- Run: docker-compose up --build, and wait until everything is finished running. If any problem try running again docker-compose up --build.<br>
 That's it, so easy just 1 command (docker-compose up --build) on the root directory.<br>
 Now open the postman and hit a POST REQUEST to localhost:3050/api/orders  (3050 on our host points to port 80 inside the NGINX container)<br>
 Do not forget to send some data on the body (ex..{
