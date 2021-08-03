@@ -1,4 +1,4 @@
-import { Subjects } from "../subjects/subjects";
+import { Subjects } from "../../subjects/subjects";
 
 export interface SuccessfulOrderEmailEvent {
   subject: Subjects.SuccessfulOrderEmailEvent;
