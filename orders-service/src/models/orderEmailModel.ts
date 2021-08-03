@@ -14,10 +14,7 @@ interface OrderEmailModel extends mongoose.Model<OrderEmailDocument> {
 }
 
 const orderEmailSchema = new mongoose.Schema({
-  orderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Order",
-  },
+  orderId: String,
   sent: {
     type: Boolean,
     default: false,

@@ -14,7 +14,13 @@ export class SuccessfulOrderEmailListener extends Listener<SuccessfulOrderEmailE
 
   async eventHandler(data: SuccessfulOrderEmailEvent["data"], msg: Message) {
     try {
-      await OrderEmail.findByIdAndUpdate(data.orderId, { sent: true });
+      await OrderEmail.findOneAndUpdate(
+        { orderId: data.orderId },
+        {
+          sent: true,
+        }
+      );
+
       msg.ack();
     } catch (err) {
       console.log(err);

@@ -4,6 +4,7 @@ import orderRouter from "./routes/orderRoutes";
 import { natsWrapper } from "./natsWrapper";
 import { globalErrorHandler } from "./controllers/errorController";
 import { AppError } from "../utils/AppError";
+import { SuccessfulOrderEmailListener } from "./events/listeners/SuccessfulOrderEmailListener";
 
 const app = express();
 
@@ -52,8 +53,8 @@ app.use(globalErrorHandler);
       console.log("NATS connection closed!");
       process.exit();
     });
-    process.on("SIGINT", () => natsWrapper.stan.close());
-    process.on("SIGTERM", () => natsWrapper.stan.close());
+
+    new SuccessfulOrderEmailListener(natsWrapper.stan).listen();
   } catch (error) {
     console.error(error);
   }
