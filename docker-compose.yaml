@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  messaging-service:
+    build: ./messaging-service
+    volumes:
+      - ./messaging-service:/app
+    environment:
+      - NODE_ENV=development
+      - NATS_CLUSTER_ID=orders-project
+      - NATS_CLIENT_ID=messaging-service
+      - NATS_URL="http://host.docker.internal:4222"
+      - EMAIL_HOST=smtp.mailtrap.io
+      - EMAIL_PORT=2525
+      - EMAIL_USERNAME=d0dc13a0f90b93
+      - EMAIL_PASSWORD=9f9e3ad66d4f9f
+      - EMAIL_FROM=yourapp@gmail.com
+  orders-service:
+    build: ./orders-service
+    volumes:
+      - ./orders-service:/app
+    environment:
+      - NODE_ENV=development
+      - NATS_CLUSTER_ID=orders-project
+      - NATS_CLIENT_ID=orders-service
+      - NATS_URL="http://host.docker.internal:4222"
+    ports:
+      - "5000:5000"
+  nats-streaming:
+    image: nats-streaming:0.19.0
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command:
+      - "--http_port"
+      - "8222"
+      - "--port"
+      - "4222"
+      - "--cluster_id"
+      - orders-project
+  nginx:
+    restart: always
+    build: ./nginx
+    ports:
+      - "3050:80"

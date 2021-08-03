@@ -1,16 +1,16 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import { AppError, globalErrorHandler } from "@marius98/common";
-
-import postRouter from "./routes/orderRoutes";
+import orderRouter from "./routes/orderRoutes";
 import { natsWrapper } from "./natsWrapper";
+import { globalErrorHandler } from "./controllers/errorController";
+import { AppError } from "../utils/AppError";
 
 const app = express();
 
 app.set("trust proxy", true);
 app.use(express.json());
 
-app.use("/api/posts", postRouter);
+app.use("/api/orders", orderRouter);
 
 app.all("*", (_req: Request, _res: Response, next: NextFunction) => {
   return next(new AppError("This route is not yet defined", 400));
@@ -31,9 +31,7 @@ app.use(globalErrorHandler);
 
   try {
     let uriConnection: string =
-      process.env.NODE_ENV === "development"
-        ? "mongodb://host.docker.internal:27017/connectixPosts"
-        : "mongodb://mongo-cluster-ip:27017/posts";
+      "mongodb://host.docker.internal:27017/order-service";
 
     await mongoose.connect(uriConnection, {
       useUnifiedTopology: true,
@@ -42,12 +40,12 @@ app.use(globalErrorHandler);
       useFindAndModify: false,
     });
 
-    console.log("Post Database connected successfully!");
+    console.log("Order Database connected successfully!");
 
     await natsWrapper.connect({
       clusterId: process.env.NATS_CLUSTER_ID,
       clientId: process.env.NATS_CLIENT_ID,
-      connectionUrl: process.env.NATS_URL,
+      connectionUrl: "http://host.docker.internal:4222",
     });
 
     natsWrapper.stan.on("close", () => {

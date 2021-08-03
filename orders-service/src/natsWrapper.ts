@@ -26,7 +26,7 @@ class NatsWrapper {
       );
 
       this._stan.on("connect", () => {
-        console.log("Post Nats connected!");
+        console.log("Order Nats connected!");
         resolve();
       });
 

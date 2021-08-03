@@ -26,7 +26,7 @@ class NatsWrapper {
       );
 
       this._stan.on("connect", () => {
-        console.log("Email Nats connected!");
+        console.log("Messaging Nats connected!");
         resolve();
       });
 

@@ -1,4 +1,6 @@
 import { natsWrapper } from "./natsWrapper";
+import mongoose from "mongoose";
+import { OrderCreatedListener } from "./events/listeners/OrderCreatedListener";
 
 (async () => {
   if (!process.env.NATS_CLUSTER_ID) {
@@ -12,20 +14,28 @@ import { natsWrapper } from "./natsWrapper";
   }
 
   try {
+    let uriConnection: string =
+      "mongodb://host.docker.internal:27017/order-service";
+
+    await mongoose.connect(uriConnection, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    });
+
     await natsWrapper.connect({
       clusterId: process.env.NATS_CLUSTER_ID,
       clientId: process.env.NATS_CLIENT_ID,
-      connectionUrl: process.env.NATS_URL,
+      connectionUrl: "http://host.docker.internal:4222",
     });
 
     natsWrapper.stan.on("close", () => {
       console.log("NATS connection closed!");
       process.exit();
     });
-    process.on("SIGINT", () => natsWrapper.stan.close());
-    process.on("SIGTERM", () => natsWrapper.stan.close());
 
- 
+    new OrderCreatedListener(natsWrapper.stan).listen();
   } catch (error) {
     console.error("error", error);
   }

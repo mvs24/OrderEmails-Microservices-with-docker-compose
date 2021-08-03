@@ -19,6 +19,7 @@ export class Email {
     ) {
       throw new Error("Please define envs");
     }
+
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: +process.env.EMAIL_PORT,
@@ -31,7 +32,7 @@ export class Email {
 
   async sendEmail(): Promise<void> {
     await this.createTransporter().sendMail({
-      from: "connectix@gmail.com",
+      from: process.env.EMAIL_FROM,
       to: this.emailOptions.to,
       subject: this.emailOptions.subject,
       text: this.emailOptions.text,
