@@ -14,7 +14,7 @@ import { OrderCreatedListener } from "./events/listeners/OrderCreatedListener";
   }
 
   try {
-    let uriConnection: string =
+    const uriConnection: string =
       "mongodb://host.docker.internal:27017/order-service";
 
     await mongoose.connect(uriConnection, {
@@ -27,7 +27,7 @@ import { OrderCreatedListener } from "./events/listeners/OrderCreatedListener";
     await natsWrapper.connect({
       clusterId: process.env.NATS_CLUSTER_ID,
       clientId: process.env.NATS_CLIENT_ID,
-      connectionUrl: "http://host.docker.internal:4222",
+      connectionUrl: process.env.NATS_URL,
     });
 
     natsWrapper.stan.on("close", () => {

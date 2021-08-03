@@ -8,12 +8,12 @@ services:
       - NODE_ENV=development
       - NATS_CLUSTER_ID=orders-project
       - NATS_CLIENT_ID=messaging-service
-      - NATS_URL="http://host.docker.internal:4222"
+      - NATS_URL=http://host.docker.internal:4222
       - EMAIL_HOST=smtp.mailtrap.io
       - EMAIL_PORT=2525
       - EMAIL_USERNAME=d0dc13a0f90b93
       - EMAIL_PASSWORD=9f9e3ad66d4f9f
-      - EMAIL_FROM=yourapp@gmail.com
+      - EMAIL_FROM=order-emailapp@gmail.com
   orders-service:
     build: ./orders-service
     volumes:
@@ -22,7 +22,7 @@ services:
       - NODE_ENV=development
       - NATS_CLUSTER_ID=orders-project
       - NATS_CLIENT_ID=orders-service
-      - NATS_URL="http://host.docker.internal:4222"
+      - NATS_URL=http://host.docker.internal:4222
     ports:
       - "5000:5000"
   nats-streaming:

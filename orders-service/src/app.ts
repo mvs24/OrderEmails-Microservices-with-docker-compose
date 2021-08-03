@@ -46,7 +46,7 @@ app.use(globalErrorHandler);
     await natsWrapper.connect({
       clusterId: process.env.NATS_CLUSTER_ID,
       clientId: process.env.NATS_CLIENT_ID,
-      connectionUrl: "http://host.docker.internal:4222",
+      connectionUrl: process.env.NATS_URL,
     });
 
     natsWrapper.stan.on("close", () => {
